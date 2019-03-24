@@ -1,0 +1,20 @@
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{repeat}[2018/10/12 repeat package]
+
+%--REPEAT FUNCTION--------------------------------
+% Repeat{5}{hey} prints heyheyheyheyhey
+% this code came from stackexchange 
+\newcommand{\Repeat}[1]{%
+    \expandafter\@Repeat\expandafter{\the\numexpr #1\relax}%
+}
+\def\@Repeat#1{%
+    \ifnum#1>0
+        \expandafter\@@Repeat\expandafter{\the\numexpr #1-1\expandafter\relax\expandafter}%
+    \else
+        \expandafter\@gobble
+    \fi
+}
+\def\@@Repeat#1#2{%
+    \@Repeat{#1}{#2}#2%
+}

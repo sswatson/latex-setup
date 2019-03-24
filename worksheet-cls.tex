@@ -1,0 +1,202 @@
+
+\documentclass[julia,solutions]{worksheet}
+
+\usepackage{lipsum} 
+
+\begin{document}
+
+\headerwithname{
+    The \texttt{worksheet} document class \\ 
+    Samuel S.\ Watson \\ \today
+  }{
+    3 cm
+  }
+
+The document class \texttt{worksheet} is designed for formatting problems and solutions using the \texttt{tcolorbox} package. It supports formatting a problems-only and solutions-included document from a single source file. The \texttt{solutionbox} environment is for blank solution space, while the \texttt{solution} environment is for the actual solutions. 
+
+\section{Basic commands}
+
+The main environments are \texttt{problem} and \texttt{solution}. Standard \texttt{tcolorbox} options, like \texttt{height = 5cm} or \texttt{height fill} can be passed to the tcolorbox.
+
+Typically one would have a \texttt{problem} environment followed by a \texttt{solutionbox} environment followed by a \texttt{solution} environment. Only one of the latter two will be displayed, according to whether the \texttt{solutions} document option is invoked (that is \texttt{\textbackslash documentclass[solutions]\{worksheet\}} will show solutions, while \texttt{\textbackslash documentclass[]\{worksheet\}} will show empty boxes). 
+
+\begin{verbatim}
+\begin{problem}
+  $\vdots$
+\end{problem}
+\end{verbatim}
+
+\begin{problem}
+  $\vdots$
+\end{problem}
+
+\begin{verbatim} 
+\begin{solution}[height = 5cm] 
+  $\vdots$
+\end{solution}
+\end{verbatim}
+
+\begin{solution}[height = 5cm] 
+  $\vdots$
+  
+  Equations, like \eqref{eq:1} below, are numbered on a per-problem basis. 
+  \begin{equation} \label{eq:1}
+    \int \frac{1}{1+x^2} \, \d x = \arctan x. 
+  \end{equation}
+\end{solution}
+
+You can put a final answer box in the lower right-hand corner with
+
+\begin{verbatim}
+\finalanswer[$\frac{5}{2}$]
+% or 
+\finalanswer[$\frac{5}{2}$][3cm][4cm]
+\end{verbatim} 
+
+or, for an empty final answer box, just \texttt{\textbackslash finalanswer}. The macro \texttt{\textbackslash solfinalanswer} gives a height-filling empty solution box with an empty final answer box. 
+
+\section{Header commands}
+
+The header is produced with the \texttt{\textbackslash header} command. A name can be included via \texttt{\textbackslash headerwithname}, which takes two arguments: the header content and the width of the name box. So the header above was produced with
+\begin{verbatim} 
+\headerwithname{
+    The \texttt{worksheet} document class \\ 
+    Samuel S.\ Watson \\ \today
+  }{
+    3 cm 
+  }
+\end{verbatim}
+
+\section{Other commands} 
+
+We can also make a problem using the \texttt{\textbackslash pb} shortcut
+
+\begin{verbatim} 
+\pb{Another example problem}
+\end{verbatim}
+
+\pb{
+  Another example problem
+}
+
+Likewise, we can produce a solutionbox using \texttt{\textbackslash sol}, which takes an optional argument of tcolorbox options, like \texttt{height = 5cm}. 
+
+We can put two problems side by side using the \texttt{problempair} environment (in which one must place two \texttt{problem} environments) or using \texttt{twoproblems}. 
+
+\begin{verbatim}
+\twoproblems{first problem contents}{second problem contents}
+\end{verbatim}
+\twoproblems{first problem contents}{second problem contents}
+
+We can also put two empty solution boxes side by side. The argument is any list of \texttt{tcolorbox} options. 
+\begin{verbatim}
+\twosolutions{height = 5cm}
+\end{verbatim}
+  \begin{tcbraster}[
+      raster columns=2,
+      height = 5cm 
+    ]
+    \begin{solution}
+    \end{solution}
+    \begin{solution}
+    \end{solution}
+  \end{tcbraster}
+
+  \vspace{12pt}
+
+\section{Inset figures} 
+
+The \texttt{wrapfigure} package doesn't play so nicely with tcolorboxes. But \texttt{worksheet.cls} has its own \texttt{insetfigure} command which juxtaposes boxes containing its first and second arguments, with alignment specified by the optional third argument (\texttt{c} for center, \texttt{t} for top, and \texttt{b} for bottom, \texttt{t} by default) and spacing specified by the optional fourth argument (\texttt{16pt} by default). Here's an example:
+
+\begin{verbatim}
+\insetfigure{
+  \lipsum[1]
+}{
+  \includegraphics[width=3cm]{example-grid-100x100pt}
+}
+\lipsum[2-3]
+\end{verbatim}
+\insetfigure{
+  \lipsum[1]
+}{
+  \includegraphics[width=3cm]{example-grid-100x100pt}
+}
+\lipsum[2-3]
+
+\section{Solutions}
+
+The accompanying Python script \texttt{processsolutions.py} can be used to simultaneously produce a pdf with solutions and one without. The only caveat here is that the square brackets in the \texttt{documentclass} command must be present, even if they're empty. 
+
+\section{Julia integration}
+
+The \texttt{pythontex} package can be used to weave Julia code into the worksheets. Combined with SymPy, which can be accessed from Julia, this can be pretty powerful. For example: 
+
+%MATRIX EXAMPLE------------
+\begin{verbatim} 
+\begin{jlcode}
+  A = rand(-5:5,5,10)
+  x = rand(-5:5,10)
+\end{jlcode}
+
+\[
+  \jltex{A} \jltex{x} = \jltex{A*x}. 
+\]
+\end{verbatim}
+
+\begin{jlcode}
+  A = rand(-5:5,5,10)
+  v = rand(-5:5,10)
+\end{jlcode}
+
+\[
+  \jltex{A} \jltex{v} = \jltex{A*v}. 
+\]
+% --------------------------
+
+% Symbolic example ---------
+\begin{verbatim}
+\begin{jlcode}
+  I = Integral(exp(x^2),x)
+\end{jlcode}
+
+\[
+  \jltex{I} = \jltex{doit(I)}. 
+\]
+\end{verbatim}
+
+\begin{jlcode}
+  I = Integral(exp(x^2),x)
+\end{jlcode}
+
+\[
+  \jltex{I} = \jltex{doit(I)}. 
+\]
+%--------------------------
+
+The Julia function \texttt{p}, which simply returns its argument in string form, also increments a global Julia variable \texttt{POINTS}, which can be used to keep a running total of the points assigned so far.
+
+\begin{problem}[title = Problem \itm (\jltex{p(5)} points)]
+  This is the first problem. 
+\end{problem}
+
+\begin{problem}[title = Problem \itm (\jltex{p(8)} points)]
+  This is the second problem. 
+\end{problem}
+
+Total points so far: \jltex{POINTS}
+
+You can use \texttt{Plots.jl} with its \texttt{pgfplots} backend to
+generate figures which can then be included. 
+
+\begin{jlcode}
+  using Plots
+  pgfplots()
+  plot(x^2,title="The squaring function",legend=:none)
+  savefig("myplot.pdf")
+\end{jlcode}
+
+\begin{center}
+  \jl{"\\includegraphics{myplot}"}
+\end{center}
+
+\end{document}

@@ -1,0 +1,86 @@
+
+\documentclass[asy,breakable]{worksheet}
+
+\begin{document}
+\headerwithname{{\large\textbf{\textsc{Brown University}}} \\
+  Problem Set 10 \\
+  Instructor: Samuel S.\ Watson \\
+  Due: 1 December 2017}{3cm}
+
+\begin{center}
+  \begin{minipage}{0.8\textwidth} 
+    \textit{Print out these pages, including the additional space at the end, and complete the problems by hand. Then use Gradescope to scan and upload the entire packet by 18:00 on the due date.}
+  \end{minipage}
+\end{center}
+
+\begin{problem} Sketch the vector fields
+$\displaystyle{\mathbf{F}_1(x,y) = \frac{y\, \mathbf{i} - x\,
+  \mathbf{j}}{\sqrt{x^2+y^2}}}$ and $\displaystyle{\mathbf{F}_2(x,y) = \frac{y\, \mathbf{i} - x\,
+  \mathbf{j}}{x^2+y^2}}$.
+\end{problem}
+
+\sol[height = 8cm] 
+
+\begin{solution}[height = 8cm] 
+  \begin{center} 
+  \begin{asy} 
+    size(6cm);
+    import vectorfield; 
+pair a = (-2,-2);
+pair b = (2,2);
+real f(real x, real y) {return x^2+y^2  == 0 ? 10 : min(10,1/sqrt(x^2+y^2));}
+path vector(pair z) {real x = z.x; real y = z.y; return
+  (0,0)--(y*f(x,y), -x*f(x,y));}
+draw((a.x,0)--(b.x,0),Arrow(4));
+draw((0,a.y)--(0,b.y),Arrow(4));
+add(vectorfieldmid(vector,a,b,0.5*blue));
+\end{asy}
+\quad
+\begin{asy} 
+  size(6cm);
+  import vectorfield; 
+pair a = (-2,-2);
+pair b = (2,2);
+real f(real x, real y) {return x^2+y^2  == 0 ? 10 : min(10,1/(x^2+y^2));}
+path vector(pair z) {real x = z.x; real y = z.y; return
+  (0,0)--(y*f(x,y), -x*f(x,y));}
+draw((a.x,0)--(b.x,0),Arrow(4));
+draw((0,a.y)--(0,b.y),Arrow(4));
+add(vectorfieldmid(vector,a,b,0.5*blue));
+\end{asy}
+\end{center}
+\end{solution}
+
+\begin{problem} Find $\int_C (x+2y) \,dx + x^2 \, dy$ where $C$ is the
+  concatenation of the line segment from $(0,0)$ to $(2,1)$ and the
+  line segment from $(2,1)$ to $(3,0)$. (Note: the notation
+  $(x+2y) \,dx + x^2 \, dy$ is another way of writing
+  $\mathbf{F}\cdot d\mathbf{r}$, where
+  $\mathbf{F} = \langle x+2y, x^2 \rangle$.)
+\end{problem}
+
+\solfinalanswer
+
+\begin{solution}[height fill] 
+  The first segment can be parametrized as $\mathbf{r}(t) = \langle
+  2t,t \rangle$ as
+  $t$ ranges from 0 to 1, so the integral along that segment is
+  \[
+    \int_0^1 \langle 2t + 2t, 4t^2 \rangle \cdot \langle 2, 1 \rangle
+    \, dt  = \int_0^1 8t + 4t^2 \, dt = 4 + \frac{4}{3} =
+    \frac{16}{3}. 
+  \]
+  The second segment can be parametrized as $\langle 2 + t, 1- t
+  \rangle$ as $t$ ranges from 0 to 1, so the integral along that
+  segment is
+    \[
+    \int_0^1 \langle 2+t + 2(1-t), (2+t)^2\rangle \cdot \langle 1, -1 \rangle
+    \, dt  = \int_0^1 4-t - (2+t)^2 dt = -\frac{17}{6}. 
+  \]
+  So the integral along the concatenation of the two segments is
+  $\displaystyle{\frac{16}{3} - \frac{17}{6} }= \frac{5}{2}$. 
+
+  \finalanswer[\Large $\displaystyle{\frac{5}{2}}$]
+\end{solution}
+
+\end{document}

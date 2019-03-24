@@ -1,0 +1,19 @@
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{asysettings}[2018/10/12 asysettings package]
+
+\RequirePackage{asymptote}
+
+\begin{asydef} 
+  defaultpen(fontsize(10));
+  settings.outformat="pdf";
+  usepackage("giambattista");
+  texpreamble("\renewcommand{\vec}[1]{\mathbf{#1}}");
+  texpreamble("\providecommand{\e}{\mathrm{e}}"); 
+  import x11colors;
+  pen softblue = rgb(0.92,0.95,0.99);
+  pen softred = rgb(0.99, 0.92, 0.91);
+  pen softyellow = rgb(0.98, 0.98, 0.9);
+  pen softgreen = rgb(0.96, 0.995, 0.98);
+  settings.render = 12;
+\end{asydef}

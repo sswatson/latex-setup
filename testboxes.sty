@@ -1,0 +1,274 @@
+
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{testboxes}[2018/10/12 testboxes package]
+
+\newif\if@breakableoption
+\DeclareOption{breakable}{\@breakableoptiontrue}
+\newif\if@solutionoption
+\DeclareOption{solutions}{\@solutionoptiontrue}
+\newif\if@solutionoption
+\DeclareOption{nocolor}{\@nocoloroptiontrue}
+
+\ProcessOptions
+
+\RequirePackage[skins,theorems,breakable,raster,listings,xparse]{tcolorbox} % for colorful boxes
+\RequirePackage{xspace} % for smart spaces following \itm and \subitm
+\RequirePackage{varwidth} % natural-width boxes, for the header
+\RequirePackage{mycolors} % custom colors
+\RequirePackage{declarecommand} % conditional command declaration
+
+%--SAVE BOXES AND LENGTHS----------------------------
+\newsavebox{\headersavebox}
+\newsavebox{\namesavebox}
+\newlength{\myleftpadding}
+\newlength{\myrightpadding}
+
+%--COUNTERS--------------------------------------
+%
+% itm is for problems, subitm for parts
+%-------------------------------------------------
+  
+\newcounter{itm} % for problem numbers
+\renewcommand{\theitm}{\arabic{itm}}
+\setcounter{itm}{0}
+\newcommand\itm{\refstepcounter{itm}\theitm\xspace%
+  \setcounter{subitm}{0}%
+  \setcounter{equation}{0}%
+}
+\newcommand\sameitm{\theitm} % to reprint the current problem
+                                                      % number without incrementing
+
+\newcounter{subitm} % for problem parts
+\renewcommand{\thesubitm}{(\alph{subitm})} % set to display lowercase
+\setcounter{subitm}{0}
+\newcommand{\subitm}{\refstepcounter{subitm}\thesubitm\xspace}
+\newcommand{\pairofprobs}[2]{\makebox[0.5\textwidth][l]{\subitm #1}\subitm #2}
+
+\newlength{\rubberlength} 
+
+%---PROBLEM AND ANSWER BOXES-----------------------
+
+% Set whether boxes break across pages depending on
+% the `breakable' document option
+\if@breakableoption
+  \declarecommand{\enhanced}{enhanced}
+  \declarecommand{\breakable}{breakable} 
+\else
+  \declarecommand{\enhanced}{}
+  \declarecommand{\breakable}{}
+\fi
+
+\if@nocoloroption
+  \newcommand{\probbgcolor}{white}
+  \newcommand{\headerbgcolor}{white}
+  \newcommand{\namebgcolor}{white}
+\else
+  \newcommand{\probbgcolor}{softseagreen}
+  \newcommand{\headerbgcolor}{softseagreen}
+  \newcommand{\namebgcolor}{white}
+\fi
+
+\newcommand{\NewProblemBox}[4]{
+\DeclareTColorBox{#1}{O{}O{}}{
+  title=#2 \itm\label{##2}, 
+  colback=#3, \enhanced, \breakable, 
+  separator sign none,
+  parbox = true,
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+  }, 
+  before skip = 8pt, 
+  colframe = #4, 
+  fonttitle=\bfseries,
+  ##1}
+}
+
+\NewProblemBox{example}{Example}{\probbgcolor}{green!35!black}
+\NewProblemBox{problem}{Problem}{\probbgcolor}{green!35!black}
+
+\newenvironment{taggedproblem}[1]{%
+\begin{problem}[title = {Problem \itm \hfill [#1]}]}{%
+\end{problem}}
+
+\newenvironment{parts}[1][(a)]{%
+  \begin{NoHyper}%
+    \begin{enumerate}[#1,leftmargin=12pt]%
+    }%
+    {%
+    \end{enumerate}%
+  \end{NoHyper}%
+}
+
+%\numberwithin{equation}{\theproblem} 
+
+% solution is for actual solutions, solutionbox below
+% is for blank space for students' solutions
+\if@solutionoption
+\newtcolorbox{solution}[1][]{
+  title=Solution, 
+  colback=white, \enhanced, \breakable, 
+  colframe=orange!35!black,
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+     \setcounter{subitm}{0}
+  }, 
+  fonttitle=\bfseries,
+  bottom = 12pt,
+  space to = \rubberlength, 
+  #1}
+\newenvironment{solutionbox}{\expandafter\comment}{\expandafter\endcomment}
+\newenvironment{solutionenv}{}{}
+\else
+\newenvironment{solution}{\expandafter\comment}{\expandafter\endcomment}
+  \newtcolorbox{solutionbox}[1][title=Solution]{
+  colback=white, \enhanced, \breakable, 
+  colframe=orange!35!black,
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+  }, 
+  fonttitle=\bfseries,
+  space to = \rubberlength, 
+  #1}
+\newenvironment{solutionenv}{\expandafter\comment}{\expandafter\endcomment}
+\fi
+
+% gives a final answer box with optional arguments
+% corresponding to the height and width of the box. 
+\NewDocumentCommand{\finalanswer}{O{} O{3cm} O{4cm}}{
+  \begin{flushright}
+  \begin{tcolorbox}[height = #2, width = #3, title=Final answer:,
+  colframe=orange!35!black, colback=white, valign=center]
+  \begin{center}
+  \vfill
+  
+  #1
+  
+  \vfill
+  \end{center} 
+  \end{tcolorbox}
+  \end{flushright}
+  }
+
+% short macro for blank page-filling solution box
+\NewDocumentCommand{\sol}{O{height fill}}{
+  \begin{solutionbox}[title=Solution, #1]
+  \end{solutionbox}
+}
+
+% solfinalanswer: three optional arguments: (i) height of
+% solution box, and (ii) height and (iii) width of final answer box
+\newlength{\differenceheight}
+\NewDocumentCommand{\solfinalanswer}{O{height fill} O{3cm} O{4cm} O{}}{%
+  \begin{solutionbox}[title=Solution, #1] %
+    #4 %
+    % \setlength{\differenceheight}{\tcbtextheight-#2-4pt}
+    \vspace{\rubberlength} %
+    \finalanswer[][#2][#3] %
+  \end{solutionbox} %
+}
+
+% Eliminate the blank solution boxes if in solution mode
+\if@solutionoption
+\RenewDocumentCommand{\sol}{O{height fill}}{}
+\RenewDocumentCommand{\solfinalanswer}{O{height fill} O{3cm} O{4cm}}{}
+\fi 
+
+\newenvironment{problempair}{
+  \begin{tcbraster}[raster columns=2, raster valign=top]
+}{
+  \end{tcbraster}
+}
+
+\newcommand{\pb}[1]{
+  \begin{problem}
+    #1
+  \end{problem}
+}
+
+\newcommand{\twoproblems}[2]{
+  \begin{problempair}
+    \begin{problem}
+      #1
+    \end{problem}
+    \begin{problem}
+      #2
+    \end{problem}
+  \end{problempair}
+}
+
+\if@solutionoption
+\newcommand{\twosolutions}[1]{}
+\else 
+\newcommand{\twosolutions}[1]{
+  \begin{tcbraster}[
+      raster columns=2,
+      #1
+    ]
+    \begin{solutionbox}
+    \end{solutionbox}
+    \begin{solutionbox}
+    \end{solutionbox}
+  \end{tcbraster}
+}
+\fi
+
+%--HEADING CONTENT----------------------------------
+
+% header box for describing basic document info 
+\NewDocumentCommand{\headerbox}{O{\headerbgcolor} m}{%
+  \begin{tcolorbox}[enhanced,hbox,%
+                    colback=\headerbgcolor, %
+                    colframe=\headerbgcolor!25!black]%
+    \begin{varwidth}{\textwidth}%
+      \begin{center}%
+        \textbf{\textsc{#2}}%
+      \end{center}%
+    \end{varwidth}%
+  \end{tcolorbox}%
+}
+
+\NewDocumentCommand{\header}{O{\headerbgcolor} m}{%
+  \begin{center}%
+    \headerbox[#1]{#2}%
+  \end{center}%
+}
+  
+% box for students to put their name 
+\newcommand{\namebox}[1][4cm]{
+  \begin{tcolorbox}[enhanced,hbox,colback=\namebgcolor,colframe=gray!35!black]
+    \begin{varwidth}{\textwidth}
+      \begin{center}
+        Name: \hspace{#1}
+	\vspace{1cm}
+      \end{center}
+    \end{varwidth}
+  \end{tcolorbox}
+}
+
+% put header and name together on the top line, 
+% with spacing worked out so that header is centered and
+% name is flushright 
+\newcommand\headerwithname[2]{
+  \begin{lrbox}{\headersavebox}
+    \headerbox{#1}
+  \end{lrbox}
+  \begin{lrbox}{\namesavebox} 
+    \namebox[#2]
+  \end{lrbox}
+  \setlength{\myleftpadding}{0.5\textwidth - 0.5\wd\headersavebox}
+  \setlength{\myrightpadding}{\myleftpadding - \wd\namesavebox}
+  
+  \hspace{\myleftpadding}
+  \raisebox{\dimexpr -\height \relax}{\usebox{\headersavebox}}
+  \hspace{\myrightpadding}
+  \raisebox{\dimexpr -\height \relax}{\usebox{\namesavebox}}
+}
+
+\newcommand{\additionalspace}{
+  \begin{tcolorbox}[title = Additional space, height fill, colback = white]
+  \end{tcolorbox}
+}
