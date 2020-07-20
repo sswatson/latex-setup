@@ -16,7 +16,7 @@
 \DeclareDocumentCommand{\sidenote}{O{rectangle,thick,black,text width =
     17.5mm,draw=MidnightBlue,fill=softblue,rounded corners=0.5mm} m O{0pt}}{%
   \setlength{\marginvoffset}{#3 - 12pt}%
-  \normalmarginpar %
+  \reversemarginpar %
   \marginnote[{%
     \makebox[0pt][r]{%
       \scriptsize \tikz \node at (0,-1) [#1]{#2};%
@@ -32,7 +32,7 @@
 % example: \authornote{ssw}{green}{Add reference here}
 \DeclareDocumentCommand{\authornote}{m m m O{0pt}}{%
        \setlength{\marginvoffset}{#4 - 12pt}%
-       \reversemarginpar%
+       \normalmarginpar%
        \marginnote[{%
           \makebox[0pt][r]{%
             \scriptsize \tikz \node at (0,-1) [rectangle,thick,black,text width = %

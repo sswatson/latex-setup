@@ -4,8 +4,8 @@
 \PassOptionsToClass{twoside}{report} 
 \LoadClassWithOptions{report}
 
-\newif\if@3Doption
-\DeclareOption{3D}{\@3Doptiontrue}
+\newif\if@threedoption
+\DeclareOption{3D}{\@threedoptiontrue}
 \newif\if@bleedoption
 \DeclareOption{bleed}{\@bleedoptiontrue}
 \newif\if@prettycodeoption

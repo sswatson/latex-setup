@@ -70,14 +70,16 @@
 \fi
 
 \newcommand{\NewProblemBox}[4]{
-\DeclareTColorBox{#1}{O{}O{}}{
-  title=#2 \itm\label{##2}, 
+\DeclareTColorBox[use counter=itm]{#1}{!O{}}{
+  title=#2 \sameitm,
   colback=#3, \enhanced, \breakable, 
   separator sign none,
   parbox = true,
   before upper = {
-    \parskip = \myparskiplength
-    \parindent = \myparindentlength
+    \parskip = \myparskiplength%
+    \parindent = \myparindentlength%
+    \setcounter{subitm}{0}%
+    \setcounter{equation}{0}%
   }, 
   before skip = 8pt, 
   colframe = #4, 
@@ -89,7 +91,7 @@
 \NewProblemBox{problem}{Problem}{\probbgcolor}{green!35!black}
 
 \newenvironment{taggedproblem}[1]{%
-\begin{problem}[title = {Problem \itm \hfill [#1]}]}{%
+\begin{problem}[title = {Problem \sameitm \hfill [#1]}]}{%
 \end{problem}}
 
 \newenvironment{parts}[1][(a)]{%
@@ -138,7 +140,7 @@
 
 % gives a final answer box with optional arguments
 % corresponding to the height and width of the box. 
-\NewDocumentCommand{\finalanswer}{O{} O{3cm} O{4cm}}{
+\NewDocumentCommand{\finalanswer}{!O{} !O{3cm} !O{4cm}}{
   \begin{flushright}
   \begin{tcolorbox}[height = #2, width = #3, title=Final answer:,
   colframe=orange!35!black, colback=white, valign=center]
@@ -162,7 +164,7 @@
 % solfinalanswer: three optional arguments: (i) height of
 % solution box, and (ii) height and (iii) width of final answer box
 \newlength{\differenceheight}
-\NewDocumentCommand{\solfinalanswer}{O{height fill} O{3cm} O{4cm} O{}}{%
+\NewDocumentCommand{\solfinalanswer}{O{height fill} O{3cm} O{4cm} !O{}}{%
   \begin{solutionbox}[title=Solution, #1] %
     #4 %
     % \setlength{\differenceheight}{\tcbtextheight-#2-4pt}

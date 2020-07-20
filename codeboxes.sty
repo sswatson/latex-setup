@@ -14,7 +14,7 @@
 \RequirePackage[svgnames]{xcolor} % colors
 \RequirePackage[skins,theorems,breakable,raster,listings,xparse]{tcolorbox}
 \RequirePackage{mycolors}
-\RequirePackage{declarecommand} 
+\RequirePackage{declarecommand}
 
 \if@breakableoption
   \declarecommand{\enhanced}{enhanced}
@@ -34,7 +34,7 @@
   \fi
   \tcbuselibrary{minted}
   \newcommand{\NewCodeBlockEnvironment}[7]{
-    \NewTCBListing{#1}{O{}O{}}{
+    \NewTCBListing{#1}{!O{}!O{}}{
       title = #2,%
       colback = #3,%
       colframe = #4,%
@@ -86,7 +86,7 @@
   \newcounter{blockcounter}
   \setcounter{blockcounter}{1}
 
-  \NewDocumentEnvironment{juliablockc}{ O{} O{} }
+  \NewDocumentEnvironment{juliablockc}{ !O{} !O{} }
   {\VerbatimEnvironment
     \begin{VerbatimOut}{mycode-tmp-\theblockcounter.jl}%
     }{%
@@ -103,7 +103,7 @@
   % \juliainput[\argone]{mycode-tmp.jl}%
   % \jlc[\argtwo]{include("../mycode-tmp.jl")}%
   % }
-  % \NewDocumentCommand\jlgetargs{ O{} O{} }
+  % \NewDocumentCommand\jlgetargs{ !O{} !O{} }
   % {\endgroup%
   %   \def\argone{#1}%
   %   \def\argtwo{#2}%
@@ -156,7 +156,7 @@
 \lstdefinelanguage{text}{}%
 \tcbuselibrary{listingsutf8}
   \newcommand{\NewCodeBlockEnvironment}[6]{
-    \NewTCBListing{#1}{O{}}{%
+    \NewTCBListing{#1}{!O{}}{%
       title = #2,%
       colback = #3,%
       colframe = #4,% 

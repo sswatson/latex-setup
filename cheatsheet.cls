@@ -26,7 +26,7 @@
   text=#3,
   rounded corners=1pt]{\small \bf \fontspec{American Typewriter Bold} #4};}
 
- \NewTCBListing{julblock}{O{}}{
+ \NewTCBListing{julblock}{!O{}}{
     minted language = julia,
     listing only,
     colback = \bgcolor,
@@ -39,7 +39,7 @@
     #1
   }
 
- \NewTCBListing{Rblock}{O{}}{
+ \NewTCBListing{Rblock}{!O{}}{
    minted language = R,
    listing only,
    colback = \bgcolor,
@@ -52,7 +52,7 @@
    #1
  }
 
- \NewTCBListing{python}{O{}}{
+ \NewTCBListing{python}{!O{}}{
    minted language = python,
    listing only,
    colback = \bgcolor,
@@ -66,7 +66,7 @@
    #1
    }
 
- \NewTColorBox{minimalbox}{O{}}{
+ \NewTColorBox{minimalbox}{!O{}}{
    colback = \bgcolor,
    colframe = \bgcolor,
    top = 0pt,
@@ -121,6 +121,7 @@
 \newcommand\panelthemegreen{\setpaneltheme{SeaGreen}{softseagreen}}
 \newcommand\panelthemered{\setpaneltheme{DarkRed!75!white}{softred}}
 \newcommand\panelthemeyellow{\setpaneltheme{yellow!40!black}{softyellow}}
+\newcommand\panelthemeorange{\setpaneltheme{orange!40!black}{softorange}}
 
 \newcommand{\addsideinfo}[1]{%
 \AddToShipoutPicture{\put(10,215){\rotatebox{90}{%
